@@ -4,7 +4,10 @@ beforeEach(async () => {
 })
 
 describe("Text box tests", () => {
-    test.todo("Should navigate to elements url")
+    test("Should navigate to '/text-box' url", async () => {
+        await page.click('#item-0');
+        expect(page.url()).toMatch(/text-box/);
+    })
     test("Should fill form and fields be displayed after clicking submit", async () => {
         await page.click('#item-0')
         await page.type('#userName', "AddressLita");
@@ -19,7 +22,14 @@ describe("Text box tests", () => {
     })
     test.todo("Email field displays error box when input is not an email") //field error class based?
     test.todo("Information displayed matches information input")
-    test.todo("Verification of elements displaying")
     test.todo("Empty field does not appear in lower section")
+    describe("UI tests", () => {
+        test("Should contain main-header with 'Text Box' text", async () =>{
+            await page.click('#item-0');
+            await expect(page).toEqualText('.main-header', "Text Box");
+        })
+        test.todo("Verification of elements displaying")
+        test.todo("User fields are displayed")
+    })
 })
 
