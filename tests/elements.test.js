@@ -4,27 +4,62 @@ beforeEach(async () => {
 })
 
 describe("Text box tests", () => {
-    test("Should navigate to '/text-box' url", async () => {
-        await page.click('#item-0');
-        expect(page.url()).toMatch(/text-box/);
+
+    describe("Main tests", () => {
+        test("Should navigate to '/text-box' url", async () => {
+            await page.click('#item-0');
+            expect(page.url()).toMatch(/text-box/);
+        })
+        test("Should fill form and fields be displayed after clicking submit", async () => {
+            await page.click('#item-0');
+            await page.type('#userName', "AddressLita");
+            await page.type('#userEmail', "test@test.com");
+            await page.type('#currentAddress', "test address");
+            await page.type('#permanentAddress', "test address that is permanent");
+            await page.click('#submit');
+            await expect(page).toHaveSelector('#name');
+            await expect(page).toHaveSelector('#email');
+            await expect(page).toHaveSelector('text=Current Address :'); //lack of unique id solved by text
+            await expect(page).toHaveSelector('#output >> #permanentAddress'); //lack of unique id solved by combined selectors
+        })
+        test("Should display error border if email does not comply with format", async () => {
+            await page.click('#item-0');
+            await page.type('#userName', "AddressLita");
+            await page.type('#userEmail', "testmail");
+            await page.type('#currentAddress', "test address");
+            await page.type('#permanentAddress', "test address that is permanent");
+            await page.click('#submit');
+            await expect(page).toHaveSelector('.field-error') // Error checking based on class for error style
+        })
+        test("Should display the information that was provided in the inputs", async () => {
+            const fullName = "AddressLita";
+            const email = "testmail@test.com";
+            const curAddr = "Test current address";
+            const permAddr = "Test address that is permanent";
+            await page.click('#item-0');
+            await page.type('#userName', fullName);
+            await page.type('#userEmail', email);
+            await page.type('#currentAddress', curAddr);
+            await page.type('#permanentAddress', permAddr);
+            await page.click('#submit');
+            await expect(page).toHaveText('#name', fullName);
+            await expect(page).toHaveText('#email', email);
+            await expect(page).toHaveText('text=' + curAddr, curAddr); //lack of unique id solved by text
+            await expect(page).toHaveText('#output >> #permanentAddress', permAddr); //lack of unique id solved by combined selectors
+
+        })
+        test("Should not display fields that where not filled", async () => {
+            await page.click('#item-0');
+            await page.type('#currentAddress', "test address");
+            await page.type('#permanentAddress', "test address that is permanent");
+            await page.click('#submit');
+            await expect(page).not.toHaveSelector('#name', {timeout: 1*1000});
+            await expect(page).not.toHaveSelector('#email', {timeout: 1*1000});
+        })
     })
-    test("Should fill form and fields be displayed after clicking submit", async () => {
-        await page.click('#item-0')
-        await page.type('#userName', "AddressLita");
-        await page.type('#userEmail', "test@test.com");
-        await page.type('#currentAddress', "test address");
-        await page.type('#permanentAddress', "test address that is permanent");
-        await page.click('#submit');
-        await expect(page).toHaveSelector('#name');
-        await expect(page).toHaveSelector('#email');
-        await expect(page).toHaveSelector('#currentAddress');
-        await expect(page).toHaveSelector('#permanentAddress');
-    })
-    test.todo("Email field displays error box when input is not an email") //field error class based?
-    test.todo("Information displayed matches information input")
-    test.todo("Empty field does not appear in lower section")
-    describe("UI tests", () => {
-        test("Should contain main-header with 'Text Box' text", async () =>{
+
+    describe("UI intended tests", () => {
+        test("Should contain main-header with 'Text Box' text", async () => {
             await page.click('#item-0');
             await expect(page).toEqualText('.main-header', "Text Box");
         })
