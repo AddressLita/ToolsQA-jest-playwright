@@ -53,8 +53,8 @@ describe("Text box tests", () => {
             await page.type('#currentAddress', "test address");
             await page.type('#permanentAddress', "test address that is permanent");
             await page.click('#submit');
-            await expect(page).not.toHaveSelector('#name', {timeout: 1*1000});
-            await expect(page).not.toHaveSelector('#email', {timeout: 1*1000});
+            await expect(page).not.toHaveSelector('#name', { timeout: 1 * 1000 });
+            await expect(page).not.toHaveSelector('#email', { timeout: 1 * 1000 });
         })
     })
 
@@ -63,8 +63,31 @@ describe("Text box tests", () => {
             await page.click('#item-0');
             await expect(page).toEqualText('.main-header', "Text Box");
         })
-        test.todo("Verification of elements displaying")
-        test.todo("User fields are displayed")
+        test("Should display ToolsQA image", async () => {
+            await page.click('#item-0');
+            const headerImage = await page.$('header >> img');
+            expect(await headerImage.getAttribute('src')).toContain("Toolsqa.jpg");
+        })
+        test("Should display form containing fields for: name, email, cur address and perm address", async () => {
+            await page.click('#item-0');
+            await expect(page).toHaveSelector('form >> #userName-wrapper');
+            await expect(page).toHaveSelector('form >> #userEmail-wrapper');
+            await expect(page).toHaveSelector('form >> #currentAddress-wrapper');
+            await expect(page).toHaveSelector('form >> #permanentAddress-wrapper');
+        })
+        test("Should display element list navigation bar with expected items", async () => {
+            await page.click('#item-0');
+            await expect(page).toEqualText('.show >> #item-0', "Text Box");
+            await expect(page).toEqualText('.show >> #item-1', "Check Box");
+            await expect(page).toEqualText('.show >> #item-2', "Radio Button");
+            await expect(page).toEqualText('.show >> #item-3', "Web Tables");
+            await expect(page).toEqualText('.show >> #item-4', "Buttons");
+            await expect(page).toEqualText('.show >> #item-5', "Links");
+            await expect(page).toEqualText('.show >> #item-6', "Broken Links - Images");
+            await expect(page).toEqualText('.show >> #item-7', "Upload and Download");
+            await expect(page).toEqualText('.show >> #item-8', "Dynamic Properties");
+            
+        })
     })
 })
 
