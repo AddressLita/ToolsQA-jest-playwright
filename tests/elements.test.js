@@ -70,19 +70,28 @@ describe("Text box tests", () => {
             await expect(page).toHaveSelector('form >> #currentAddress-wrapper');
             await expect(page).toHaveSelector('form >> #permanentAddress-wrapper');
         })
-        test("Should display element list navigation bar with expected items", async () => {
-            await page.click('#item-0');
-            await expect(page).toEqualText('.show >> #item-0', "Text Box");
-            await expect(page).toEqualText('.show >> #item-1', "Check Box");
-            await expect(page).toEqualText('.show >> #item-2', "Radio Button");
-            await expect(page).toEqualText('.show >> #item-3', "Web Tables");
-            await expect(page).toEqualText('.show >> #item-4', "Buttons");
-            await expect(page).toEqualText('.show >> #item-5', "Links");
-            await expect(page).toEqualText('.show >> #item-6', "Broken Links - Images");
-            await expect(page).toEqualText('.show >> #item-7', "Upload and Download");
-            await expect(page).toEqualText('.show >> #item-8', "Dynamic Properties");
+    })
+})
 
-        })
+// Check box section is considered as static
+describe("Check box tests", () => {
+    describe("Main tests", () => {
+        test.todo("navigate to /checkbox url")
+        test.todo("home folder is displayed")
+        test.todo("click arrow displays next level")
+        test.todo("click home checkbox display you have selected message")
+        test.todo("click home checked box hides you have selected message")
+        test.todo("click home partially check box selects everything in it")
+        test.todo("click + displays whole tree")
+        test.todo("click - hides whole tree")
+        test.todo("click desktop selects everything in it")
+        test.todo("click checked desktop deselects everythin in it")
+        test.todo("click documents selects everything in it")
+        test.todo("click checked document deselects everything in it")
+        test.todo("click checkbox of file displays file name in display")
+        test.todo("selection matches result")
+
+        test.todo("main header check box")
     })
 })
 
@@ -91,6 +100,19 @@ describe("UI tests for general sections", () => {
         await page.click('#item-0');
         const headerImage = await page.$('header >> img');
         expect(await headerImage.getAttribute('src')).toContain("Toolsqa.jpg");
+    })
+    test("Should display element list navigation bar with expected items", async () => {
+        await page.click('#item-0');
+        await expect(page).toEqualText('.show >> #item-0', "Text Box");
+        await expect(page).toEqualText('.show >> #item-1', "Check Box");
+        await expect(page).toEqualText('.show >> #item-2', "Radio Button");
+        await expect(page).toEqualText('.show >> #item-3', "Web Tables");
+        await expect(page).toEqualText('.show >> #item-4', "Buttons");
+        await expect(page).toEqualText('.show >> #item-5', "Links");
+        await expect(page).toEqualText('.show >> #item-6', "Broken Links - Images");
+        await expect(page).toEqualText('.show >> #item-7', "Upload and Download");
+        await expect(page).toEqualText('.show >> #item-8', "Dynamic Properties");
+
     })
 })
 
