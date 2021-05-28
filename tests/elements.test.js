@@ -63,11 +63,6 @@ describe("Text box tests", () => {
             await page.click('#item-0');
             await expect(page).toEqualText('.main-header', "Text Box");
         })
-        test("Should display ToolsQA image", async () => {
-            await page.click('#item-0');
-            const headerImage = await page.$('header >> img');
-            expect(await headerImage.getAttribute('src')).toContain("Toolsqa.jpg");
-        })
         test("Should display form containing fields for: name, email, cur address and perm address", async () => {
             await page.click('#item-0');
             await expect(page).toHaveSelector('form >> #userName-wrapper');
@@ -86,8 +81,16 @@ describe("Text box tests", () => {
             await expect(page).toEqualText('.show >> #item-6', "Broken Links - Images");
             await expect(page).toEqualText('.show >> #item-7', "Upload and Download");
             await expect(page).toEqualText('.show >> #item-8', "Dynamic Properties");
-            
+
         })
+    })
+})
+
+describe("UI tests for general sections", () => {
+    test("Should display ToolsQA image", async () => {
+        await page.click('#item-0');
+        const headerImage = await page.$('header >> img');
+        expect(await headerImage.getAttribute('src')).toContain("Toolsqa.jpg");
     })
 })
 
