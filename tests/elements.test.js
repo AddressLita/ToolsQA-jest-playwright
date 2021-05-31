@@ -76,22 +76,104 @@ describe("Text box tests", () => {
 // Check box section is considered as static
 describe("Check box tests", () => {
     describe("Main tests", () => {
-        test.todo("navigate to /checkbox url")
-        test.todo("home folder is displayed")
-        test.todo("click arrow displays next level")
-        test.todo("click home checkbox display you have selected message")
-        test.todo("click home checked box hides you have selected message")
-        test.todo("click home partially check box selects everything in it")
-        test.todo("click + displays whole tree")
-        test.todo("click - hides whole tree")
-        test.todo("click desktop selects everything in it")
-        test.todo("click checked desktop deselects everythin in it")
-        test.todo("click documents selects everything in it")
-        test.todo("click checked document deselects everything in it")
-        test.todo("click checkbox of file displays file name in display")
-        test.todo("selection matches result")
+        test("Should navigate to '/checkbox' url", async () => {
+            await page.click('#item-1');
+            expect(page.url()).toMatch(/checkbox/);
+        })
+        test("Should display next file level when the arrow is clicked", async () => {
+            await page.click('#item-1');
+            await page.click('[title=Toggle]');
+            await expect(page).toHaveSelector('"Desktop"');
+            await expect(page).toHaveSelector('"Documents"');
+            await expect(page).toHaveSelector('"Downloads"');
+        })
+        test("Should display 'You have selected :' message with all folders and files when selecting home folder", async () => {
+            await page.click('#item-1');
+            await page.click('[for=tree-node-home]');
+            await expect(page).toHaveSelector('#result');
+            await expect(page).toEqualText('#result', "You have selected :homedesktopnotescommandsdocumentsworkspacereactangularveuofficepublicprivateclassifiedgeneraldownloadswordFileexcelFile")
+        })
+        test("Should hide 'You have selected' message when clicking and already selected home folder", async () => {
+            await page.click('#item-1');
+            await page.click('[for=tree-node-home]');
+            await expect(page).toHaveSelector('#result');
+            await page.click('[for=tree-node-home]');
+            await expect(page).not.toHaveSelector('#result', { timeout: 1 * 1000 });
+        })
+        test("Should select every element by clicking a partially selected home folder", async () => {
+            await page.click('#item-1');
+            await page.click('[title=Toggle]');
+            await page.click('[for=tree-node-desktop]');
+            await page.click('[for=tree-node-home]');
+            await expect(page).toEqualText('#result', "You have selected :homedesktopnotescommandsdocumentsworkspacereactangularveuofficepublicprivateclassifiedgeneraldownloadswordFileexcelFile");
+        })
+        test("Should display all items after clicking '+' icon", async () => {
+            await page.click('#item-1');
+            await page.click('[aria-label="Expand all"]');
+            await expect(page).toHaveSelector('"Home"');
+            await expect(page).toHaveSelector('"Desktop"');
+            await expect(page).toHaveSelector('"Notes"');
+            await expect(page).toHaveSelector('"Commands"');
+            await expect(page).toHaveSelector('"Documents"');
+            await expect(page).toHaveSelector('"WorkSpace"');
+            await expect(page).toHaveSelector('"React"');
+            await expect(page).toHaveSelector('"Angular"');
+            await expect(page).toHaveSelector('"Veu"');
+            await expect(page).toHaveSelector('"Office"');
+            await expect(page).toHaveSelector('"Public"');
+            await expect(page).toHaveSelector('"Private"');
+            await expect(page).toHaveSelector('"Classified"');
+            await expect(page).toHaveSelector('"General"');
+            await expect(page).toHaveSelector('"Downloads"');
+            await expect(page).toHaveSelector('"Word File.doc"');
+            await expect(page).toHaveSelector('"Excel File.doc"');
+        })
+        test("Should hide all items after clicking '-' icon", async () => {
+            await page.click('#item-1');
+            await page.click('[aria-label="Expand all"]');
+            await page.click('[aria-label="Collapse all"]');
+            await expect(page).not.toHaveSelector('"Notes"', { timeout: 1 * 1000 });
+        })
+        test("Should select all items inside desktop folder when selecting it", async () => {
+            await page.click('#item-1');
+            await page.click('[title=Toggle]');
+            await page.click('[for=tree-node-desktop]');
+            await expect(page).toEqualText('#result', "You have selected :desktopnotescommands");
+        })
+        test("Should unselect all items inside desktop folder when clicking an already selected desktop folder", async () => {
+            await page.click('#item-1');
+            await page.click('[title=Toggle]');
+            await page.click('[for=tree-node-desktop]');
+            await expect(page).toHaveSelector('#result');
+            await page.click('[for=tree-node-desktop]');
+            await expect(page).not.toHaveSelector('#result', { timeout: 1 * 1000 });
+        })
+        test("Should select all items inside documents folder when selecting it", async () => {
+            await page.click('#item-1');
+            await page.click('[title=Toggle]');
+            await page.click('[for=tree-node-documents]');
+            await expect(page).toEqualText('#result', "You have selected :documentsworkspacereactangularveuofficepublicprivateclassifiedgeneral");
+        })
+        test("Should unselect all items inside documents folder when clicking an already selected documents folder", async () => {
+            await page.click('#item-1');
+            await page.click('[title=Toggle]');
+            await page.click('[for=tree-node-documents]');
+            await expect(page).toHaveSelector('#result');
+            await page.click('[for=tree-node-documents]');
+            await expect(page).not.toHaveSelector('#result', { timeout: 1 * 1000 });
+        })
+        test("Should display selected file's filename in results", async () => {
+            await page.click('#item-1');
+            await page.click('[title=Toggle]');
+            await page.click(':nth-match(li ol [title=Toggle], 3)');
+            await page.click('[for=tree-node-wordFile]');
+            await expect(page).toHaveText('#result', "wordFile");
+        })
 
-        test.todo("main header check box")
+        describe("UI intended tests", () => {
+            test.todo("main header check box")
+            test.todo("home folder is displayed")
+        })
     })
 })
 
