@@ -171,8 +171,16 @@ describe("Check box tests", () => {
         })
 
         describe("UI intended tests", () => {
-            test.todo("main header check box")
-            test.todo("home folder is displayed")
+            test("Should contain main-header with 'Check Box' text", async () => {
+                await page.click('#item-1');
+                await expect(page).toEqualText('.main-header', "Check Box");
+            })
+            test("Should display only home folder when arriving to the page", async () => {
+                await page.click('#item-1');
+                await expect(page).toHaveSelector('"Home"');
+                await expect(page).not.toHaveSelector('"Desktop"', { timeout: 1 * 1000 });
+                await expect(page).not.toHaveSelector('#result', { timeout: 1 * 1000 });
+            })
         })
     })
 })
