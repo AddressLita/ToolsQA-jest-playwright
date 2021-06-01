@@ -188,9 +188,21 @@ describe("Check box tests", () => {
 
 describe("Radio button tests", () => {
     describe("Main tests", () => {
-        test.todo("selecting yes is reflected")
-        test.todo("selecting impressive is reflected")
-        test.todo("no option is disabled")
+        test("Should display 'You have selected Yes' message when selecting 'Yes' radio button", async () => {
+            await page.click('#item-2');
+            await page.check('[for=yesRadio]');
+            await expect(page).toHaveText('p', "Yes");
+        })
+        test("Should display 'You have selected Impressive' message when selecting 'Impressive' radio button", async () => {
+            await page.click('#item-2');
+            await page.check('[for=impressiveRadio]');
+            await expect(page).toHaveText('p', "Impressive");
+        })
+        test("Should display 'No' radio button disabled", async () => {
+            await page.click('#item-2');
+            const radioNo = await page.$('[for=noRadio]');
+            expect(await radioNo.isDisabled()).toBeTruthy();
+        })
     })
 
     describe("UI intended tests", () => {
@@ -198,6 +210,7 @@ describe("Radio button tests", () => {
         test.todo("question is displayed")
         test.todo("right quantity of radio buttons")
         test.todo("expected options in radio buttons")
+        test.todo("selection not displayed if nothing selected")
     })
 })
 
