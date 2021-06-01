@@ -169,19 +169,35 @@ describe("Check box tests", () => {
             await page.click('[for=tree-node-wordFile]');
             await expect(page).toHaveText('#result', "wordFile");
         })
+    })
 
-        describe("UI intended tests", () => {
-            test("Should contain main-header with 'Check Box' text", async () => {
-                await page.click('#item-1');
-                await expect(page).toEqualText('.main-header', "Check Box");
-            })
-            test("Should display only home folder when arriving to the page", async () => {
-                await page.click('#item-1');
-                await expect(page).toHaveSelector('"Home"');
-                await expect(page).not.toHaveSelector('"Desktop"', { timeout: 1 * 1000 });
-                await expect(page).not.toHaveSelector('#result', { timeout: 1 * 1000 });
-            })
+    describe("UI intended tests", () => {
+        test("Should contain main-header with 'Check Box' text", async () => {
+            await page.click('#item-1');
+            await expect(page).toEqualText('.main-header', "Check Box");
         })
+        test("Should display only home folder when arriving to the page", async () => {
+            await page.click('#item-1');
+            await expect(page).toHaveSelector('"Home"');
+            await expect(page).not.toHaveSelector('"Desktop"', { timeout: 1 * 1000 });
+            await expect(page).not.toHaveSelector('#result', { timeout: 1 * 1000 });
+        })
+    })
+
+})
+
+describe("Radio button tests", () => {
+    describe("Main tests", () => {
+        test.todo("selecting yes is reflected")
+        test.todo("selecting impressive is reflected")
+        test.todo("no option is disabled")
+    })
+
+    describe("UI intended tests", () => {
+        test.todo("header with 'Radio Button")
+        test.todo("question is displayed")
+        test.todo("right quantity of radio buttons")
+        test.todo("expected options in radio buttons")
     })
 })
 
