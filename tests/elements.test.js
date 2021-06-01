@@ -206,11 +206,28 @@ describe("Radio button tests", () => {
     })
 
     describe("UI intended tests", () => {
-        test.todo("header with 'Radio Button")
-        test.todo("question is displayed")
-        test.todo("right quantity of radio buttons")
-        test.todo("expected options in radio buttons")
-        test.todo("selection not displayed if nothing selected")
+        test("Should contain main-header with 'Radio Button' text", async () => {
+            await page.click('#item-2');
+            await expect(page).toEqualText('.main-header', "Radio Button");
+        })
+        test("Should display question 'Do you like the site?'", async () => {
+            await page.click('#item-2');
+            await expect(page).toEqualText('.mb-3', "Do you like the site?");
+        })
+        test("Should display 3 radio buttons", async () => {
+            await page.click('#item-2');
+            await expect(page).toHaveSelectorCount('[type=radio]', 3);
+        })
+        test("Should display expected options in radio buttons", async () => {
+            await page.click('#item-2');
+            await expect(page).toEqualText('[for=yesRadio]', "Yes");
+            await expect(page).toEqualText('[for=impressiveRadio]', "Impressive");
+            await expect(page).toEqualText('[for=noRadio]', "No");
+        })
+        test("Should not display 'You have selected' message when no radio button has been selected", async () => {
+            await page.click('#item-2');
+            await expect(page).not.toHaveSelector('p', { timeout: 1 * 1000 });
+        })
     })
 })
 
