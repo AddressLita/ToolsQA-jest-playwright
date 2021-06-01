@@ -169,18 +169,64 @@ describe("Check box tests", () => {
             await page.click('[for=tree-node-wordFile]');
             await expect(page).toHaveText('#result', "wordFile");
         })
+    })
 
-        describe("UI intended tests", () => {
-            test("Should contain main-header with 'Check Box' text", async () => {
-                await page.click('#item-1');
-                await expect(page).toEqualText('.main-header', "Check Box");
-            })
-            test("Should display only home folder when arriving to the page", async () => {
-                await page.click('#item-1');
-                await expect(page).toHaveSelector('"Home"');
-                await expect(page).not.toHaveSelector('"Desktop"', { timeout: 1 * 1000 });
-                await expect(page).not.toHaveSelector('#result', { timeout: 1 * 1000 });
-            })
+    describe("UI intended tests", () => {
+        test("Should contain main-header with 'Check Box' text", async () => {
+            await page.click('#item-1');
+            await expect(page).toEqualText('.main-header', "Check Box");
+        })
+        test("Should display only home folder when arriving to the page", async () => {
+            await page.click('#item-1');
+            await expect(page).toHaveSelector('"Home"');
+            await expect(page).not.toHaveSelector('"Desktop"', { timeout: 1 * 1000 });
+            await expect(page).not.toHaveSelector('#result', { timeout: 1 * 1000 });
+        })
+    })
+
+})
+
+describe("Radio button tests", () => {
+    describe("Main tests", () => {
+        test("Should display 'You have selected Yes' message when selecting 'Yes' radio button", async () => {
+            await page.click('#item-2');
+            await page.check('[for=yesRadio]');
+            await expect(page).toHaveText('p', "Yes");
+        })
+        test("Should display 'You have selected Impressive' message when selecting 'Impressive' radio button", async () => {
+            await page.click('#item-2');
+            await page.check('[for=impressiveRadio]');
+            await expect(page).toHaveText('p', "Impressive");
+        })
+        test("Should display 'No' radio button disabled", async () => {
+            await page.click('#item-2');
+            const radioNo = await page.$('[for=noRadio]');
+            expect(await radioNo.isDisabled()).toBeTruthy();
+        })
+    })
+
+    describe("UI intended tests", () => {
+        test("Should contain main-header with 'Radio Button' text", async () => {
+            await page.click('#item-2');
+            await expect(page).toEqualText('.main-header', "Radio Button");
+        })
+        test("Should display question 'Do you like the site?'", async () => {
+            await page.click('#item-2');
+            await expect(page).toEqualText('.mb-3', "Do you like the site?");
+        })
+        test("Should display 3 radio buttons", async () => {
+            await page.click('#item-2');
+            await expect(page).toHaveSelectorCount('[type=radio]', 3);
+        })
+        test("Should display expected options in radio buttons", async () => {
+            await page.click('#item-2');
+            await expect(page).toEqualText('[for=yesRadio]', "Yes");
+            await expect(page).toEqualText('[for=impressiveRadio]', "Impressive");
+            await expect(page).toEqualText('[for=noRadio]', "No");
+        })
+        test("Should not display 'You have selected' message when no radio button has been selected", async () => {
+            await page.click('#item-2');
+            await expect(page).not.toHaveSelector('p', { timeout: 1 * 1000 });
         })
     })
 })
