@@ -231,6 +231,38 @@ describe("Radio button tests", () => {
     })
 })
 
+describe("Web tables tests", () => {
+        describe("Main tests", () =>{
+            test.todo("search bar searches by any value")
+            test.todo("add record")
+            test.todo("edit record")
+            test.todo("delete record")
+            test.todo("registration form validations")
+            test.todo("first name sort")
+            test.todo("last name sort")
+            test.todo("age name sort")
+            test.todo("email sort")
+            test.todo("salary sort")
+            test.todo("department sort")
+            test.todo("next button")
+            test.todo("previous button")
+            test.todo("page count")
+            test.todo("change rows")
+
+        })
+
+        describe("UI intended tests", () => {
+            test.todo("Should contain main-header with 'Web Tables' text")
+            test.todo("add button display")
+            test.todo("search bar display")
+            test.todo("header names are correct")
+            test.todo("three records display")
+            test.todo("first page display")
+            test.todo("ten rows display")
+            test.todo("navigation buttons disabled")
+        })
+})
+
 describe("UI tests for general sections", () => {
     test("Should display ToolsQA image", async () => {
         await page.click('#item-0');
