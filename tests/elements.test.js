@@ -374,7 +374,7 @@ describe("Web tables tests", () => {
             await page.click('#submit');
             await page.selectOption('[aria-label="rows per page"]', '5');
             const nxtBut = await page.$('"Next"');
-            expect(await nxtBut.isEnabled()).toBeTruthy(); // checking if button is no longer disbled
+            expect(await nxtBut.isEnabled()).toBeTruthy(); // checking if button is no longer disabled
             await page.click('"Next"');
             await expect(page).toHaveSelector('"Second"');
         })
@@ -423,14 +423,48 @@ describe("Web tables tests", () => {
     })
 
     describe("UI intended tests", () => {
-        test.todo("Should contain main-header with 'Web Tables' text")
-        test.todo("add button display")
-        test.todo("search bar display")
-        test.todo("header names are correct")
-        test.todo("three records display")
-        test.todo("first page display")
-        test.todo("ten rows display")
-        test.todo("navigation buttons disabled")
+        test("Should contain main-header with 'Web Tables' text", async () => {
+            await page.click('#item-3');
+            await expect(page).toEqualText('.main-header', "Web Tables");
+        })
+        test("Should display 'Add' button", async () => {
+            await page.click('#item-3');
+            await expect(page).toHaveSelector('#addNewRecordButton');
+        })
+        test("Should displayh search bar", async () => {
+            await page.click('#item-3');
+            await expect(page).toHaveSelector('#searchBox');
+        })
+        test("Should display expected header titles", async () => {
+            await page.click('#item-3');
+            await expect(page).toEqualText(':nth-match(.rt-th, 1)', "First Name");
+            await expect(page).toEqualText(':nth-match(.rt-th, 2)', "Last Name");
+            await expect(page).toEqualText(':nth-match(.rt-th, 3)', "Age");
+            await expect(page).toEqualText(':nth-match(.rt-th, 4)', "Email");
+            await expect(page).toEqualText(':nth-match(.rt-th, 5)', "Salary");
+            await expect(page).toEqualText(':nth-match(.rt-th, 6)', "Department");
+            await expect(page).toEqualText(':nth-match(.rt-th, 7)', "Action");
+        })
+        test("Should display 3 prefilled records", async () => {
+            await page.click('#item-3');
+            await expect(page).toHaveSelectorCount('.-padRow', 7);
+        })
+        test("Should display the first page when accessing the page", async () => {
+            await page.click('#item-3');
+            const pageNum = await page.$('[aria-label="jump to page"]');
+            expect(await pageNum.getAttribute('value')).toBe("1");
+        })
+        test("Should display 10 rows when accessing the page", async () => {
+            await page.click('#item-3');
+            await expect(page).toHaveSelectorCount('.rt-tr-group', 10);
+        })
+        test("Should display navigation buttons as disabled", async () => {
+            await page.click('#item-3');
+            const nxtBut = await page.$('"Next"');
+            expect(await nxtBut.isDisabled()).toBeTruthy();
+            const pvrBut = await page.$('"Previous"');
+            expect(await pvrBut.isDisabled()).toBeTruthy();
+        })
     })
 })
 
