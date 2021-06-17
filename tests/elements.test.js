@@ -188,6 +188,10 @@ describe("Check box tests", () => {
 
 describe("Radio button tests", () => {
     describe("Main tests", () => {
+        test("Should navigate to '/radio-button' url", async () => {
+            await page.click('#item-2');
+            expect(page.url()).toMatch(/radio-button/);
+        })
         test("Should display 'You have selected Yes' message when selecting 'Yes' radio button", async () => {
             await page.click('#item-2');
             await page.check('[for=yesRadio]');
@@ -232,35 +236,202 @@ describe("Radio button tests", () => {
 })
 
 describe("Web tables tests", () => {
-        describe("Main tests", () =>{
-            test.todo("search bar searches by any value")
-            test.todo("add record")
-            test.todo("edit record")
-            test.todo("delete record")
-            test.todo("registration form validations")
-            test.todo("first name sort")
-            test.todo("last name sort")
-            test.todo("age name sort")
-            test.todo("email sort")
-            test.todo("salary sort")
-            test.todo("department sort")
-            test.todo("next button")
-            test.todo("previous button")
-            test.todo("page count")
-            test.todo("change rows")
-
+    describe("Main tests", () => {
+        test("Should navigate to '/webtables' url", async () => {
+            await page.click('#item-3');
+            expect(page.url()).toMatch(/webtables/);
+        })
+        test("Should add a record when filling 'Registration Form' after clicking submit button", async () => {
+            await page.click('#item-3');
+            await page.click('#addNewRecordButton');
+            await page.fill('#firstName', "Test");
+            await page.fill('#lastName', "Last");
+            await page.fill('#userEmail', "test@email.com");
+            await page.fill('#age', "55");
+            await page.fill('#salary', "1000");
+            await page.fill('#department', "Building");
+            await page.click('#submit');
+            await expect(page).toHaveSelector('"Last"');
+        })
+        test("Should edit a record when clicking editing icon", async () => {
+            await page.click('#item-3');
+            await page.click('#edit-record-2');
+            await page.fill('#firstName', "Test");
+            await page.click('#submit');
+            await expect(page).toHaveSelector('"Test"');
+        })
+        test("Should delete a record when clicking delete icon", async () => {
+            await page.click('#item-3');
+            await page.click('#delete-record-1');
+            await expect(page).not.toHaveSelector('"Cierra"', { timeout: 1 * 1000 });
+        })
+        test("Should display error texboxes if input do not match the expected pattern", async () => {
+            await page.click('#item-3');
+            await page.click('#addNewRecordButton');
+            await page.fill('#userEmail', "test");
+            await page.fill('#age', "t");
+            await page.fill('#salary', "text");
+            await page.click('#submit');
+            await expect(page).toHaveSelectorCount('input:invalid', 6);
+        })
+        test("Should display only records that have a matching field wiht the value input on the search bar", async () => {
+            await page.click('#item-3');
+            await page.fill('#searchBox', "45");
+            await expect(page).toHaveSelector('"45"');
+            await expect(page).not.toHaveSelector('"29"', { timeout: 1 * 1000 });
+        })
+        test("Should sort in ascending alphabetical order based on 'First Name' field when cliking 'First Name' heading", async () => {
+            let nameArr = [];
+            await page.click('#item-3');
+            const tempArr = await page.$$('.rt-td');
+            for (i = 0; i < tempArr.length; i += 7) {
+                nameArr.push(await tempArr[i].textContent())
+            }
+            nameArr.sort();
+            await page.click(':nth-match(.rt-th, 1)');
+            await expect(page).toHaveText(':nth-match(.rt-td, 1)', nameArr[0]);
+        })
+        test("Should sort in ascending alphabetical order based on 'Last Name' field when cliking 'Last Name' heading", async () => {
+            let nameArr = [];
+            await page.click('#item-3');
+            const tempArr = await page.$$('.rt-td');
+            for (i = 1; i < tempArr.length; i += 7) {
+                nameArr.push(await tempArr[i].textContent())
+            }
+            nameArr.sort();
+            await page.click(':nth-match(.rt-th, 2)');
+            await expect(page).toHaveText(':nth-match(.rt-td, 2)', nameArr[0]);
+        })
+        test("Should sort in ascending alphabetical order based on 'Age' field when cliking 'Age' heading", async () => {
+            let ageArr = [];
+            await page.click('#item-3');
+            const tempArr = await page.$$('.rt-td');
+            for (i = 2; i < tempArr.length; i += 7) {
+                ageArr.push(await tempArr[i].textContent())
+            }
+            ageArr.sort();
+            await page.click(':nth-match(.rt-th, 3)');
+            await expect(page).toHaveText(':nth-match(.rt-td, 3)', ageArr[0]);
+        })
+        test("Should sort in ascending alphabetical order based on 'Email' field when cliking 'Email' heading", async () => {
+            let emArr = [];
+            await page.click('#item-3');
+            const tempArr = await page.$$('.rt-td');
+            for (i = 3; i < tempArr.length; i += 7) {
+                emArr.push(await tempArr[i].textContent())
+            }
+            emArr.sort();
+            await page.click(':nth-match(.rt-th, 4)');
+            await expect(page).toHaveText(':nth-match(.rt-td, 4)', emArr[0]);
+        })
+        test("Should sort in ascending numerical order based on 'Salary' field when cliking 'Salary' heading", async () => {
+            let salArr = [];
+            await page.click('#item-3');
+            const tempArr = await page.$$('.rt-td');
+            for (i = 4; i < tempArr.length; i += 7) {
+                salArr.push(await tempArr[i].textContent())
+            }
+            salArr.sort(function (a, b) { return a - b }); //sorting numerically ascending, this places "&nbsp" first
+            let cleanArr = salArr.filter(function (num) { return num != '\xa0' }); //Creating a clean array that will erase Non-breakable space(&nbsp) elements, &nbsp is char 0xa0 (160 dec)
+            await page.click(':nth-match(.rt-th, 5)');
+            await expect(page).toHaveText(':nth-match(.rt-td, 5)', cleanArr[0]);
+        })
+        test("Should sort in ascending alphabetical order based on 'Department' field when cliking 'Department' heading", async () => {
+            let depArr = [];
+            await page.click('#item-3');
+            const tempArr = await page.$$('.rt-td');
+            for (i = 5; i < tempArr.length; i += 7) {
+                depArr.push(await tempArr[i].textContent())
+            }
+            depArr.sort();
+            await page.click(':nth-match(.rt-th, 6)');
+            await expect(page).toHaveText(':nth-match(.rt-td, 6)', depArr[0]);
+        })
+        test("Should change the rows displayed to the selected option in rows dropdown", async () => {
+            await page.click('#item-3');
+            await page.selectOption('[aria-label="rows per page"]', '25');
+            await expect(page).toHaveSelectorCount('.rt-tr-group', 25);
+        })
+        test("Should change to next page when 'Next' button is clicked", async () => {
+            await page.click('#item-3');
+            for (i = 0; i < 2; i++) {
+                await page.click('#addNewRecordButton');
+                await page.fill('#firstName', "Test");
+                await page.fill('#lastName', "Last");
+                await page.fill('#userEmail', "test@email.com");
+                await page.fill('#age', "55");
+                await page.fill('#salary', "1000");
+                await page.fill('#department', "Building");
+                await page.click('#submit');
+            }
+            await page.click('#addNewRecordButton');
+            await page.fill('#firstName', "Second");
+            await page.fill('#lastName', "Page");
+            await page.fill('#userEmail', "secondpage@email.com");
+            await page.fill('#age', "22");
+            await page.fill('#salary', "2000");
+            await page.fill('#department', "SecondDepartment");
+            await page.click('#submit');
+            await page.selectOption('[aria-label="rows per page"]', '5');
+            const nxtBut = await page.$('"Next"');
+            expect(await nxtBut.isEnabled()).toBeTruthy(); // checking if button is no longer disbled
+            await page.click('"Next"');
+            await expect(page).toHaveSelector('"Second"');
+        })
+        test("Should change to previous page when 'Previous' button is clicked", async () => {
+            await page.click('#item-3');
+            for (i = 0; i < 2; i++) {
+                await page.click('#addNewRecordButton');
+                await page.fill('#firstName', "Test");
+                await page.fill('#lastName', "Last");
+                await page.fill('#userEmail', "test@email.com");
+                await page.fill('#age', "55");
+                await page.fill('#salary', "1000");
+                await page.fill('#department', "Building");
+                await page.click('#submit');
+            }
+            await page.click('#addNewRecordButton');
+            await page.fill('#firstName', "Second");
+            await page.fill('#lastName', "Page");
+            await page.fill('#userEmail', "secondpage@email.com");
+            await page.fill('#age', "22");
+            await page.fill('#salary', "2000");
+            await page.fill('#department', "SecondDepartment");
+            await page.click('#submit');
+            await page.selectOption('[aria-label="rows per page"]', '5');
+            await page.click('"Next"');
+            const pvrBut = await page.$('"Previous"');
+            expect(await pvrBut.isEnabled()).toBeTruthy();
+            await page.click('"Previous"');
+        })
+        test("Should display the amount of pages corresponding to the number of records and rows displayed", async () => {
+            await page.click('#item-3');
+            for (i = 0; i < 8; i++) {
+                await page.click('#addNewRecordButton');
+                await page.fill('#firstName', "Test");
+                await page.fill('#lastName', "Last");
+                await page.fill('#userEmail', "test@email.com");
+                await page.fill('#age', "55");
+                await page.fill('#salary', "1000");
+                await page.fill('#department', "Building");
+                await page.click('#submit');
+            }
+            await page.selectOption('[aria-label="rows per page"]', '5');
+            await expect(page).toEqualText('.-totalPages', '3');
         })
 
-        describe("UI intended tests", () => {
-            test.todo("Should contain main-header with 'Web Tables' text")
-            test.todo("add button display")
-            test.todo("search bar display")
-            test.todo("header names are correct")
-            test.todo("three records display")
-            test.todo("first page display")
-            test.todo("ten rows display")
-            test.todo("navigation buttons disabled")
-        })
+    })
+
+    describe("UI intended tests", () => {
+        test.todo("Should contain main-header with 'Web Tables' text")
+        test.todo("add button display")
+        test.todo("search bar display")
+        test.todo("header names are correct")
+        test.todo("three records display")
+        test.todo("first page display")
+        test.todo("ten rows display")
+        test.todo("navigation buttons disabled")
+    })
 })
 
 describe("UI tests for general sections", () => {
