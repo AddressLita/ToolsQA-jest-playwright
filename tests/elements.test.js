@@ -491,8 +491,14 @@ describe("Buttons tests", () => {
         })
     })
     describe("UI intended tests", () => {
-        test.todo("Should contain main-header with 'Buttons' text")
-        test.todo("display three buttons")
+        test("Should contain main-header with 'Buttons' text", async () => {
+            await page.click('#item-4');
+            await expect(page).toEqualText('.main-header', "Buttons");
+        })
+        test("Should display three buttons in the page", async () => {
+            await page.click('#item-4');
+            await expect(page).toHaveSelectorCount('.btn-primary', 3);
+        })
     })
 })
 
