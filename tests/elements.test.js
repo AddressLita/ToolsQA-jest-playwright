@@ -431,7 +431,7 @@ describe("Web tables tests", () => {
             await page.click('#item-3');
             await expect(page).toHaveSelector('#addNewRecordButton');
         })
-        test("Should displayh search bar", async () => {
+        test("Should display search bar", async () => {
             await page.click('#item-3');
             await expect(page).toHaveSelector('#searchBox');
         })
@@ -464,6 +464,40 @@ describe("Web tables tests", () => {
             expect(await nxtBut.isDisabled()).toBeTruthy();
             const pvrBut = await page.$('"Previous"');
             expect(await pvrBut.isDisabled()).toBeTruthy();
+        })
+    })
+})
+
+describe("Buttons tests", () => {
+    describe("Main tests", () => {
+        test("Should navigate to '/buttons' url", async () => {
+            await page.click('#item-4');
+            expect(page.url()).toMatch(/buttons/);
+        })
+        test("Should display dynamic click message after clicking 'Click Me' button", async () => {
+            await page.click('#item-4');
+            await page.click('"Click Me"');
+            await expect(page).toEqualText('#dynamicClickMessage', "You have done a dynamic click");
+        })
+        test("Should display right click message after clicking 'Right Click Me' button", async () => {
+            await page.click('#item-4');
+            await page.click('"Right Click Me"', { button: 'right' });
+            await expect(page).toEqualText('#rightClickMessage', "You have done a right click");
+        })
+        test("Should display double click message after clicking 'Double Click Me' button", async () => {
+            await page.click('#item-4');
+            await page.dblclick('"Double Click Me"');
+            await expect(page).toEqualText('#doubleClickMessage', "You have done a double click");
+        })
+    })
+    describe("UI intended tests", () => {
+        test("Should contain main-header with 'Buttons' text", async () => {
+            await page.click('#item-4');
+            await expect(page).toEqualText('.main-header', "Buttons");
+        })
+        test("Should display three buttons in the page", async () => {
+            await page.click('#item-4');
+            await expect(page).toHaveSelectorCount('.btn-primary', 3);
         })
     })
 })
