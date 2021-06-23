@@ -431,7 +431,7 @@ describe("Web tables tests", () => {
             await page.click('#item-3');
             await expect(page).toHaveSelector('#addNewRecordButton');
         })
-        test("Should displayh search bar", async () => {
+        test("Should display search bar", async () => {
             await page.click('#item-3');
             await expect(page).toHaveSelector('#searchBox');
         })
@@ -465,6 +465,19 @@ describe("Web tables tests", () => {
             const pvrBut = await page.$('"Previous"');
             expect(await pvrBut.isDisabled()).toBeTruthy();
         })
+    })
+})
+
+describe("Buttons tests", () => {
+    describe("Main tests", () => {
+        test.todo("Should navigate to '/buttons' url")
+        test.todo("click me button")
+        test.todo("right click me button")
+        test.todo("double click me button")
+    })
+    describe("UI intended tests", () => {
+        test.todo("Should contain main-header with 'Buttons' text")
+        test.todo("display three buttons")
     })
 })
 
