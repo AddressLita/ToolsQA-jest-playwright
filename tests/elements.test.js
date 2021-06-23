@@ -470,10 +470,25 @@ describe("Web tables tests", () => {
 
 describe("Buttons tests", () => {
     describe("Main tests", () => {
-        test.todo("Should navigate to '/buttons' url")
-        test.todo("click me button")
-        test.todo("right click me button")
-        test.todo("double click me button")
+        test("Should navigate to '/buttons' url", async () => {
+            await page.click('#item-4');
+            expect(page.url()).toMatch(/buttons/);
+        })
+        test("Should display dynamic click message after clicking 'Click Me' button", async () => {
+            await page.click('#item-4');
+            await page.click('"Click Me"');
+            await expect(page).toEqualText('#dynamicClickMessage', "You have done a dynamic click");
+        })
+        test("Should display right click message after clicking 'Right Click Me' button", async () => {
+            await page.click('#item-4');
+            await page.click('"Right Click Me"', { button: 'right' });
+            await expect(page).toEqualText('#rightClickMessage', "You have done a right click");
+        })
+        test("Should display double click message after clicking 'Double Click Me' button", async () => {
+            await page.click('#item-4');
+            await page.dblclick('"Double Click Me"');
+            await expect(page).toEqualText('#doubleClickMessage', "You have done a double click");
+        })
     })
     describe("UI intended tests", () => {
         test.todo("Should contain main-header with 'Buttons' text")
