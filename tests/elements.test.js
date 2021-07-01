@@ -502,6 +502,28 @@ describe("Buttons tests", () => {
     })
 })
 
+describe("Links tests", () => {
+    describe("Main tests", () => {
+        test.todo("Should navigate to '/webtables' url")
+        test.todo("home link")
+        test.todo("homeeTLiX link")
+        test.todo("created link")
+        test.todo("no content link")
+        test.todo("moved link")
+        test.todo("bad request link")
+        test.todo("unauthorized link")
+        test.todo("forbidden link")
+        test.todo("not found link")
+    })
+    describe("UI intended tests", () => {
+        test.todo("Should contain main-header with 'Links' text")
+        test.todo("title for new tab links")
+        test.todo("title for api calls for links")
+        test.todo("number of links")
+        test.todo("links response text")
+    })
+})
+
 describe("UI tests for general sections", () => {
     test("Should display ToolsQA image", async () => {
         await page.click('#item-0');
