@@ -602,10 +602,22 @@ describe("Links tests", () => {
         })
     })
     describe("UI intended tests", () => {
-        test.todo("Should contain main-header with 'Links' text")
-        test.todo("title for new tab links")
-        test.todo("title for api calls for links")
-        test.todo("number of links")
+        test("Should contain main-header with 'Links' text",  async () => {
+            await page.click('#item-5');
+            await expect(page).toEqualText('.main-header', "Links");
+        })
+        test("Should contain a title for new tab links 'Following links will open new tab'", async () => {
+            await page.click('#item-5');
+            await expect(page).toEqualText(':nth-match(h5, 1)', "Following links will open new tab");
+        })
+        test("Should contain a title for api calls links 'Following links will send an api call'", async () => {
+            await page.click('#item-5');
+            await expect(page).toEqualText(':nth-match(h5, 2)', "Following links will send an api call");
+        })
+        test("Should contain 9 links specific to this section", async () => {
+            await page.click('#item-5');
+            await expect(page).toHaveSelectorCount('#linkWrapper >> a', 9);
+        })
     })
 })
 
