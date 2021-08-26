@@ -508,8 +508,26 @@ describe("Links tests", () => {
             await page.click('#item-5');
             expect(page.url()).toMatch(/links/);
         })
-        test.todo("home link")
-        test.todo("homeeTLiX link")
+        test("Should open new tab in home page when clicking 'Home' link", async () => {
+            await page.click('#item-5');
+            const [newTab] = await Promise.all([
+                context.waitForEvent('page'),
+                page.click('#simpleLink') // Opens a new tab
+              ])
+              await newTab.waitForLoadState();
+              expect(newTab.url()).toEqual("https://demoqa.com/");
+              newTab.close();
+        })
+        test("Should open new tab in home page when clicking Home dynamic link", async () => {
+            await page.click('#item-5');
+            const [newTab] = await Promise.all([
+                context.waitForEvent('page'),
+                page.click('#dynamicLink')
+              ])
+              await newTab.waitForLoadState();
+              expect(newTab.url()).toEqual("https://demoqa.com/");
+              newTab.close();
+        })
         test("Should respond with 201 response when clicking created link", async () => {
             let apiResponses = [];
             await page.click('#item-5');
@@ -588,7 +606,6 @@ describe("Links tests", () => {
         test.todo("title for new tab links")
         test.todo("title for api calls for links")
         test.todo("number of links")
-        test.todo("links response text")
     })
 })
 
