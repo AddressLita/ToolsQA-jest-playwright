@@ -502,6 +502,125 @@ describe("Buttons tests", () => {
     })
 })
 
+describe("Links tests", () => {
+    describe("Main tests", () => {
+        test("Should navigate to '/webtables' url", async () => {
+            await page.click('#item-5');
+            expect(page.url()).toMatch(/links/);
+        })
+        test("Should open new tab in home page when clicking 'Home' link", async () => {
+            await page.click('#item-5');
+            const [newTab] = await Promise.all([
+                context.waitForEvent('page'),
+                page.click('#simpleLink') // Opens a new tab
+              ])
+              await newTab.waitForLoadState();
+              expect(newTab.url()).toEqual("https://demoqa.com/");
+              newTab.close();
+        })
+        test("Should open new tab in home page when clicking Home dynamic link", async () => {
+            await page.click('#item-5');
+            const [newTab] = await Promise.all([
+                context.waitForEvent('page'),
+                page.click('#dynamicLink')
+              ])
+              await newTab.waitForLoadState();
+              expect(newTab.url()).toEqual("https://demoqa.com/");
+              newTab.close();
+        })
+        test("Should respond with 201 response when clicking created link", async () => {
+            let apiResponses = [];
+            await page.click('#item-5');
+            await page.click('#created');
+            //start API responses monitoring
+            page.on('response', response => {
+                //console.log('>>', response.status(), response.statusText()), //debugging received responses
+                apiResponses.push(response.status()) //saving received responses for testing
+            });
+            await expect(page).toHaveText('#linkResponse', "201 and status text Created");
+            expect(apiResponses).toContain(201); // confirm API sent the expected response
+        })
+        test("Should respond with 204 response when clicking no content link", async () => {
+            let apiResponses = [];
+            await page.click('#item-5');
+            await page.click('#no-content');
+            page.on('response', response => {
+                apiResponses.push(response.status())
+            });
+            await expect(page).toHaveText('#linkResponse', "204 and status text No Content");
+            expect(apiResponses).toContain(204);
+        })
+        test("Should respond with 301 response when clicking moved link", async () => {
+            let apiResponses = [];
+            await page.click('#item-5');
+            await page.click('#moved');
+            page.on('response', response => {
+                apiResponses.push(response.status())
+            });
+            await expect(page).toHaveText('#linkResponse', "301 and status text Moved Permanently");
+            expect(apiResponses).toContain(301);
+        })
+        test("Should respond with 400 response when clicking bad request link", async () => {
+            let apiResponses = [];
+            await page.click('#item-5');
+            await page.click('#bad-request');
+            page.on('response', response => {
+                apiResponses.push(response.status())
+            });
+            await expect(page).toHaveText('#linkResponse', "400 and status text Bad Request");
+            expect(apiResponses).toContain(400);
+        })
+        test("Should respond with 401 response when clicking unauthorized link", async () => {
+            let apiResponses = [];
+            await page.click('#item-5');
+            await page.click('#unauthorized');
+            page.on('response', response => {
+                apiResponses.push(response.status())
+            });
+            await expect(page).toHaveText('#linkResponse', "401 and status text Unauthorized");
+            expect(apiResponses).toContain(401);
+        })
+        test("Should respond with 403 response when clicking forbidden link", async () => {
+            let apiResponses = [];
+            await page.click('#item-5');
+            await page.click('#forbidden');
+            page.on('response', response => {
+                apiResponses.push(response.status())
+            });
+            await expect(page).toHaveText('#linkResponse', "403 and status text Forbidden");
+            expect(apiResponses).toContain(403);
+        })
+        test("Should respond with 404 response when clicking not found link", async () => {
+            let apiResponses = [];
+            await page.click('#item-5');
+            await page.click('#invalid-url');
+            page.on('response', response => {
+                apiResponses.push(response.status())
+            });
+            await expect(page).toHaveText('#linkResponse', "404 and status text Not Found");
+            expect(apiResponses).toContain(404);
+        })
+    })
+    describe("UI intended tests", () => {
+        test("Should contain main-header with 'Links' text",  async () => {
+            await page.click('#item-5');
+            await expect(page).toEqualText('.main-header', "Links");
+        })
+        test("Should contain a title for new tab links 'Following links will open new tab'", async () => {
+            await page.click('#item-5');
+            await expect(page).toEqualText(':nth-match(h5, 1)', "Following links will open new tab");
+        })
+        test("Should contain a title for api calls links 'Following links will send an api call'", async () => {
+            await page.click('#item-5');
+            await expect(page).toEqualText(':nth-match(h5, 2)', "Following links will send an api call");
+        })
+        test("Should contain 9 links specific to this section", async () => {
+            await page.click('#item-5');
+            await expect(page).toHaveSelectorCount('#linkWrapper >> a', 9);
+        })
+    })
+})
+
 describe("UI tests for general sections", () => {
     test("Should display ToolsQA image", async () => {
         await page.click('#item-0');
